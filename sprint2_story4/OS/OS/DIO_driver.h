@@ -13,20 +13,20 @@
 #include "BiteWiseOperation.h"
 #include <avr/io.h>
 
-#define led0 12
-#define led1 13
-#define led2 14
-#define led3 15
-#define but1  10
+#define led0 12     /* pin value of led0 on board */
+#define led1 13       /* pin value of led1 on board */
+#define led2 14          /* pin value of led2 on board */
+#define led3 15        /* pin value of led3 on board */
+#define but1  10         /* pin value of button 1 on board */
 
-#define PORTA_START 0
-#define PORTA_END 7
-#define PORTB_START 8
-#define PORTB_END 15
-#define PORTC_START 16
-#define PORTC_END 24
-#define PORTD_START 25
-#define PORTD_END 31
+#define PORTA_START 0        /* port A starting pin on board */
+#define PORTA_END 7          /* port A ending pin on board */
+#define PORTB_START 8        /* port B starting pin on board */
+#define PORTB_END 15           /* port B ending pin on board */
+#define PORTC_START 16           /* port C starting pin on board */
+#define PORTC_END 24            /* port C ending pin on board */
+#define PORTD_START 25        /* port D starting pin on board */
+#define PORTD_END 31            /* port D ending pin on board */
 
 
 

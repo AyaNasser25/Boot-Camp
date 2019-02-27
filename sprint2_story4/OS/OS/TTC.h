@@ -12,6 +12,9 @@
 #include "task.h"
 
 #define  max_size 3
+#define periority_0 0
+#define periority_1 1
+#define periority_2 2
 
 	
 /* struct that contains :

@@ -37,6 +37,7 @@ void set_callback(ptr_fun fun)
 {
 	gcall_back = fun;
 	
+	
 }
 /********************************************************************************************************
 * Function name :-   ISR                                                                                *
@@ -49,7 +50,7 @@ void set_callback(ptr_fun fun)
  {
 	  /* increase global flag that tells all files about timing */
 	 if(gcall_back != NULL){
-	 gcall_back();
+	   gcall_back();
 	 }
 	
  }

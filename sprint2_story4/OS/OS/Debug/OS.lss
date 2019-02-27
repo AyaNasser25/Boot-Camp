@@ -3,31 +3,31 @@ OS.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000b20  00000000  00000000  00000074  2**1
+  0 .text         00000b52  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000b94  2**0
+  1 .data         00000000  00800060  00800060  00000bc6  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000028  00800060  00800060  00000b94  2**0
+  2 .bss          00000028  00800060  00800060  00000bc6  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000b94  2**0
+  3 .comment      00000030  00000000  00000000  00000bc6  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000bc4  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000bf8  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000108  00000000  00000000  00000c00  2**0
+  5 .debug_aranges 00000108  00000000  00000000  00000c34  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000b2b  00000000  00000000  00000d08  2**0
+  6 .debug_info   00000b2d  00000000  00000000  00000d3c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000007d9  00000000  00000000  00001833  2**0
+  7 .debug_abbrev 000007d9  00000000  00000000  00001869  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000008ae  00000000  00000000  0000200c  2**0
+  8 .debug_line   000008c6  00000000  00000000  00002042  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000002e8  00000000  00000000  000028bc  2**2
+  9 .debug_frame  000002e8  00000000  00000000  00002908  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000004be  00000000  00000000  00002ba4  2**0
+ 10 .debug_str    000004c9  00000000  00000000  00002bf0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000055a  00000000  00000000  00003062  2**0
+ 11 .debug_loc    0000055a  00000000  00000000  000030b9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000b8  00000000  00000000  000035bc  2**0
+ 12 .debug_ranges 000000b8  00000000  00000000  00003613  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -77,7 +77,7 @@ Disassembly of section .text:
   6c:	b2 07       	cpc	r27, r18
   6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
   70:	0e 94 2c 02 	call	0x458	; 0x458 <main>
-  74:	0c 94 8e 05 	jmp	0xb1c	; 0xb1c <_exit>
+  74:	0c 94 a7 05 	jmp	0xb4e	; 0xb4e <_exit>
 
 00000078 <__bad_interrupt>:
   78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -774,6 +774,7 @@ void task1 (void){
  494:	df 93       	push	r29
  496:	cd b7       	in	r28, 0x3d	; 61
  498:	de b7       	in	r29, 0x3e	; 62
+	/* call function that toggle pin and give it led0 pin to toggle */
 	DIO_togglePin(led0);
  49a:	8c e0       	ldi	r24, 0x0C	; 12
  49c:	0e 94 af 01 	call	0x35e	; 0x35e <DIO_togglePin>
@@ -796,7 +797,7 @@ void task2 (void){
  4ac:	cd b7       	in	r28, 0x3d	; 61
  4ae:	de b7       	in	r29, 0x3e	; 62
 	
-	
+	/* call function that toggle pin and give it led1 pin to toggle */
 	DIO_togglePin(led1);
  4b0:	8d e0       	ldi	r24, 0x0D	; 13
  4b2:	0e 94 af 01 	call	0x35e	; 0x35e <DIO_togglePin>
@@ -819,6 +820,7 @@ void task3 (void){
  4c0:	df 93       	push	r29
  4c2:	cd b7       	in	r28, 0x3d	; 61
  4c4:	de b7       	in	r29, 0x3e	; 62
+	/* call function that toggle pin and give it led2 pin to toggle */
 	DIO_togglePin(led2);
  4c6:	8e e0       	ldi	r24, 0x0E	; 14
  4c8:	0e 94 af 01 	call	0x35e	; 0x35e <DIO_togglePin>
@@ -904,6 +906,7 @@ void set_callback(ptr_fun fun)
  534:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <_edata+0x1>
  538:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
 	
+	
 }
  53c:	00 00       	nop
  53e:	0f 90       	pop	r0
@@ -946,7 +949,7 @@ void set_callback(ptr_fun fun)
  578:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
  57c:	89 2b       	or	r24, r25
  57e:	31 f0       	breq	.+12     	; 0x58c <__vector_10+0x44>
-	 gcall_back();
+	   gcall_back();
  580:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
  584:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
  588:	fc 01       	movw	r30, r24
@@ -986,35 +989,35 @@ void schedulerInit(void){
  5ba:	cd b7       	in	r28, 0x3d	; 61
  5bc:	de b7       	in	r29, 0x3e	; 62
 	
-	 scheduler_Add_Task(task1,2000,30);
- 5be:	2e e1       	ldi	r18, 0x1E	; 30
+	 scheduler_Add_Task(task1,sec_2,periority_2);
+ 5be:	22 e0       	ldi	r18, 0x02	; 2
  5c0:	40 ed       	ldi	r20, 0xD0	; 208
  5c2:	57 e0       	ldi	r21, 0x07	; 7
  5c4:	60 e0       	ldi	r22, 0x00	; 0
  5c6:	70 e0       	ldi	r23, 0x00	; 0
  5c8:	89 e4       	ldi	r24, 0x49	; 73
  5ca:	92 e0       	ldi	r25, 0x02	; 2
- 5cc:	0e 94 d8 03 	call	0x7b0	; 0x7b0 <scheduler_Add_Task>
+ 5cc:	0e 94 f1 03 	call	0x7e2	; 0x7e2 <scheduler_Add_Task>
 	
-	 scheduler_Add_Task(task2,2000,1);
- 5d0:	21 e0       	ldi	r18, 0x01	; 1
+	 scheduler_Add_Task(task2,sec_2,periority_0);
+ 5d0:	20 e0       	ldi	r18, 0x00	; 0
  5d2:	40 ed       	ldi	r20, 0xD0	; 208
  5d4:	57 e0       	ldi	r21, 0x07	; 7
  5d6:	60 e0       	ldi	r22, 0x00	; 0
  5d8:	70 e0       	ldi	r23, 0x00	; 0
  5da:	84 e5       	ldi	r24, 0x54	; 84
  5dc:	92 e0       	ldi	r25, 0x02	; 2
- 5de:	0e 94 d8 03 	call	0x7b0	; 0x7b0 <scheduler_Add_Task>
+ 5de:	0e 94 f1 03 	call	0x7e2	; 0x7e2 <scheduler_Add_Task>
 	 
-	 scheduler_Add_Task(task3,4000,2);
- 5e2:	22 e0       	ldi	r18, 0x02	; 2
+	 scheduler_Add_Task(task3,sec_4,periority_1);
+ 5e2:	21 e0       	ldi	r18, 0x01	; 1
  5e4:	40 ea       	ldi	r20, 0xA0	; 160
  5e6:	5f e0       	ldi	r21, 0x0F	; 15
  5e8:	60 e0       	ldi	r22, 0x00	; 0
  5ea:	70 e0       	ldi	r23, 0x00	; 0
  5ec:	8f e5       	ldi	r24, 0x5F	; 95
  5ee:	92 e0       	ldi	r25, 0x02	; 2
- 5f0:	0e 94 d8 03 	call	0x7b0	; 0x7b0 <scheduler_Add_Task>
+ 5f0:	0e 94 f1 03 	call	0x7e2	; 0x7e2 <scheduler_Add_Task>
 	 
 	 sort_arr(task_arr,g_index);
  5f4:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
@@ -1024,9 +1027,9 @@ void schedulerInit(void){
  604:	68 2f       	mov	r22, r24
  606:	87 e6       	ldi	r24, 0x67	; 103
  608:	90 e0       	ldi	r25, 0x00	; 0
- 60a:	0e 94 75 04 	call	0x8ea	; 0x8ea <sort_arr>
+ 60a:	0e 94 8e 04 	call	0x91c	; 0x91c <sort_arr>
 	 
-	timer_init(200);
+	timer_init(OCR_1ms);
  60e:	88 ec       	ldi	r24, 0xC8	; 200
  610:	0e 94 6a 02 	call	0x4d4	; 0x4d4 <timer_init>
 	return ;
@@ -1047,742 +1050,769 @@ void Scheduler_Start (void)
  61e:	df 93       	push	r29
  620:	cd b7       	in	r28, 0x3d	; 61
  622:	de b7       	in	r29, 0x3e	; 62
+	/* contains super loop that runs all timer and handle all event */
 	
-	
-	while(1){
+	while(TRUE){
+		/* calling that function to get timer tick */
 		set_callback(set_callback_flag);
- 624:	8d ec       	ldi	r24, 0xCD	; 205
+ 624:	86 ee       	ldi	r24, 0xE6	; 230
  626:	93 e0       	ldi	r25, 0x03	; 3
  628:	0e 94 91 02 	call	0x522	; 0x522 <set_callback>
+		/* if flag is true it indicate that timer count 1 ms then call tasks */
 		if( g_flag == TRUE){
  62c:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <g_flag>
  630:	81 30       	cpi	r24, 0x01	; 1
  632:	c1 f7       	brne	.-16     	; 0x624 <Scheduler_Start+0x8>
+			/* change flag value to zero again to know next tick */
 			g_flag = FALSE ;
  634:	10 92 66 00 	sts	0x0066, r1	; 0x800066 <g_flag>
-			if(DIO_ReadPin(10)){
+			/* detect if switch is pressed */
+			if(DIO_ReadPin(but1)){
  638:	8a e0       	ldi	r24, 0x0A	; 10
  63a:	0e 94 3e 00 	call	0x7c	; 0x7c <DIO_ReadPin>
  63e:	88 23       	and	r24, r24
- 640:	21 f0       	breq	.+8      	; 0x64a <Scheduler_Start+0x2e>
-				scheduler_Remove_Task(task2);
- 642:	84 e5       	ldi	r24, 0x54	; 84
- 644:	92 e0       	ldi	r25, 0x02	; 2
- 646:	0e 94 0f 05 	call	0xa1e	; 0xa1e <scheduler_Remove_Task>
+ 640:	e9 f0       	breq	.+58     	; 0x67c <Scheduler_Start+0x60>
+				/* if switch is pressed then remove desired task */
+				while(DIO_ReadPin(but1));
+ 642:	00 00       	nop
+ 644:	8a e0       	ldi	r24, 0x0A	; 10
+ 646:	0e 94 3e 00 	call	0x7c	; 0x7c <DIO_ReadPin>
+ 64a:	88 23       	and	r24, r24
+ 64c:	d9 f7       	brne	.-10     	; 0x644 <Scheduler_Start+0x28>
+				scheduler_Remove_Task(task1);
+ 64e:	89 e4       	ldi	r24, 0x49	; 73
+ 650:	92 e0       	ldi	r25, 0x02	; 2
+ 652:	0e 94 28 05 	call	0xa50	; 0xa50 <scheduler_Remove_Task>
+				g_index -- ;
+ 656:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 65a:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 65e:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 662:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 666:	01 97       	sbiw	r24, 0x01	; 1
+ 668:	a1 09       	sbc	r26, r1
+ 66a:	b1 09       	sbc	r27, r1
+ 66c:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <g_index>
+ 670:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <g_index+0x1>
+ 674:	a0 93 64 00 	sts	0x0064, r26	; 0x800064 <g_index+0x2>
+ 678:	b0 93 65 00 	sts	0x0065, r27	; 0x800065 <g_index+0x3>
+				
 			}
+			/* if switch not pressed continue normal operation */
 			else { }
+				/* call function that call all tasks with spesific time */
 	pre_filled_arr(task_arr,g_index);
- 64a:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 64e:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 652:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 656:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 65a:	ac 01       	movw	r20, r24
- 65c:	bd 01       	movw	r22, r26
- 65e:	87 e6       	ldi	r24, 0x67	; 103
- 660:	90 e0       	ldi	r25, 0x00	; 0
- 662:	0e 94 34 03 	call	0x668	; 0x668 <pre_filled_arr>
+ 67c:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 680:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 684:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 688:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 68c:	ac 01       	movw	r20, r24
+ 68e:	bd 01       	movw	r22, r26
+ 690:	87 e6       	ldi	r24, 0x67	; 103
+ 692:	90 e0       	ldi	r25, 0x00	; 0
+ 694:	0e 94 4d 03 	call	0x69a	; 0x69a <pre_filled_arr>
 	
 		}
    
 		}
- 666:	de cf       	rjmp	.-68     	; 0x624 <Scheduler_Start+0x8>
+ 698:	c5 cf       	rjmp	.-118    	; 0x624 <Scheduler_Start+0x8>
 
-00000668 <pre_filled_arr>:
+0000069a <pre_filled_arr>:
 * Function name :- pre_filled_arr                                                                       *
 * function job :-  function that responsible for calling tasks with specified time                      *                                           *
 * function arguments :-    array of struct and its size                                                 *
 * function return :-            N/A                                                                     *
 ********************************************************************************************************/
 void pre_filled_arr(TCB arr_fun[],uint32 size){
- 668:	cf 93       	push	r28
- 66a:	df 93       	push	r29
- 66c:	cd b7       	in	r28, 0x3d	; 61
- 66e:	de b7       	in	r29, 0x3e	; 62
- 670:	2a 97       	sbiw	r28, 0x0a	; 10
- 672:	0f b6       	in	r0, 0x3f	; 63
- 674:	f8 94       	cli
- 676:	de bf       	out	0x3e, r29	; 62
- 678:	0f be       	out	0x3f, r0	; 63
- 67a:	cd bf       	out	0x3d, r28	; 61
- 67c:	9e 83       	std	Y+6, r25	; 0x06
- 67e:	8d 83       	std	Y+5, r24	; 0x05
- 680:	4f 83       	std	Y+7, r20	; 0x07
- 682:	58 87       	std	Y+8, r21	; 0x08
- 684:	69 87       	std	Y+9, r22	; 0x09
- 686:	7a 87       	std	Y+10, r23	; 0x0a
+ 69a:	cf 93       	push	r28
+ 69c:	df 93       	push	r29
+ 69e:	cd b7       	in	r28, 0x3d	; 61
+ 6a0:	de b7       	in	r29, 0x3e	; 62
+ 6a2:	2a 97       	sbiw	r28, 0x0a	; 10
+ 6a4:	0f b6       	in	r0, 0x3f	; 63
+ 6a6:	f8 94       	cli
+ 6a8:	de bf       	out	0x3e, r29	; 62
+ 6aa:	0f be       	out	0x3f, r0	; 63
+ 6ac:	cd bf       	out	0x3d, r28	; 61
+ 6ae:	9e 83       	std	Y+6, r25	; 0x06
+ 6b0:	8d 83       	std	Y+5, r24	; 0x05
+ 6b2:	4f 83       	std	Y+7, r20	; 0x07
+ 6b4:	58 87       	std	Y+8, r21	; 0x08
+ 6b6:	69 87       	std	Y+9, r22	; 0x09
+ 6b8:	7a 87       	std	Y+10, r23	; 0x0a
     /* - call task by their order */
 	uint32 index;
 	for(index = 0;index<size;index++){
- 688:	19 82       	std	Y+1, r1	; 0x01
- 68a:	1a 82       	std	Y+2, r1	; 0x02
- 68c:	1b 82       	std	Y+3, r1	; 0x03
- 68e:	1c 82       	std	Y+4, r1	; 0x04
- 690:	6c c0       	rjmp	.+216    	; 0x76a <pre_filled_arr+0x102>
+ 6ba:	19 82       	std	Y+1, r1	; 0x01
+ 6bc:	1a 82       	std	Y+2, r1	; 0x02
+ 6be:	1b 82       	std	Y+3, r1	; 0x03
+ 6c0:	1c 82       	std	Y+4, r1	; 0x04
+ 6c2:	6c c0       	rjmp	.+216    	; 0x79c <pre_filled_arr+0x102>
 		
 	if(arr_fun[index].remaining_ticks == FALSE){
- 692:	29 81       	ldd	r18, Y+1	; 0x01
- 694:	3a 81       	ldd	r19, Y+2	; 0x02
- 696:	4b e0       	ldi	r20, 0x0B	; 11
- 698:	42 9f       	mul	r20, r18
- 69a:	c0 01       	movw	r24, r0
- 69c:	43 9f       	mul	r20, r19
- 69e:	90 0d       	add	r25, r0
- 6a0:	11 24       	eor	r1, r1
- 6a2:	2d 81       	ldd	r18, Y+5	; 0x05
- 6a4:	3e 81       	ldd	r19, Y+6	; 0x06
- 6a6:	82 0f       	add	r24, r18
- 6a8:	93 1f       	adc	r25, r19
- 6aa:	fc 01       	movw	r30, r24
- 6ac:	86 81       	ldd	r24, Z+6	; 0x06
- 6ae:	97 81       	ldd	r25, Z+7	; 0x07
- 6b0:	a0 85       	ldd	r26, Z+8	; 0x08
- 6b2:	b1 85       	ldd	r27, Z+9	; 0x09
- 6b4:	89 2b       	or	r24, r25
- 6b6:	8a 2b       	or	r24, r26
- 6b8:	8b 2b       	or	r24, r27
- 6ba:	99 f5       	brne	.+102    	; 0x722 <pre_filled_arr+0xba>
+ 6c4:	29 81       	ldd	r18, Y+1	; 0x01
+ 6c6:	3a 81       	ldd	r19, Y+2	; 0x02
+ 6c8:	4b e0       	ldi	r20, 0x0B	; 11
+ 6ca:	42 9f       	mul	r20, r18
+ 6cc:	c0 01       	movw	r24, r0
+ 6ce:	43 9f       	mul	r20, r19
+ 6d0:	90 0d       	add	r25, r0
+ 6d2:	11 24       	eor	r1, r1
+ 6d4:	2d 81       	ldd	r18, Y+5	; 0x05
+ 6d6:	3e 81       	ldd	r19, Y+6	; 0x06
+ 6d8:	82 0f       	add	r24, r18
+ 6da:	93 1f       	adc	r25, r19
+ 6dc:	fc 01       	movw	r30, r24
+ 6de:	86 81       	ldd	r24, Z+6	; 0x06
+ 6e0:	97 81       	ldd	r25, Z+7	; 0x07
+ 6e2:	a0 85       	ldd	r26, Z+8	; 0x08
+ 6e4:	b1 85       	ldd	r27, Z+9	; 0x09
+ 6e6:	89 2b       	or	r24, r25
+ 6e8:	8a 2b       	or	r24, r26
+ 6ea:	8b 2b       	or	r24, r27
+ 6ec:	99 f5       	brne	.+102    	; 0x754 <pre_filled_arr+0xba>
 		
 		arr_fun[index].ptr_task_fun();
- 6bc:	29 81       	ldd	r18, Y+1	; 0x01
- 6be:	3a 81       	ldd	r19, Y+2	; 0x02
- 6c0:	4b e0       	ldi	r20, 0x0B	; 11
- 6c2:	42 9f       	mul	r20, r18
- 6c4:	c0 01       	movw	r24, r0
- 6c6:	43 9f       	mul	r20, r19
- 6c8:	90 0d       	add	r25, r0
- 6ca:	11 24       	eor	r1, r1
- 6cc:	2d 81       	ldd	r18, Y+5	; 0x05
- 6ce:	3e 81       	ldd	r19, Y+6	; 0x06
- 6d0:	82 0f       	add	r24, r18
- 6d2:	93 1f       	adc	r25, r19
- 6d4:	fc 01       	movw	r30, r24
- 6d6:	80 81       	ld	r24, Z
- 6d8:	91 81       	ldd	r25, Z+1	; 0x01
- 6da:	fc 01       	movw	r30, r24
- 6dc:	09 95       	icall
+ 6ee:	29 81       	ldd	r18, Y+1	; 0x01
+ 6f0:	3a 81       	ldd	r19, Y+2	; 0x02
+ 6f2:	4b e0       	ldi	r20, 0x0B	; 11
+ 6f4:	42 9f       	mul	r20, r18
+ 6f6:	c0 01       	movw	r24, r0
+ 6f8:	43 9f       	mul	r20, r19
+ 6fa:	90 0d       	add	r25, r0
+ 6fc:	11 24       	eor	r1, r1
+ 6fe:	2d 81       	ldd	r18, Y+5	; 0x05
+ 700:	3e 81       	ldd	r19, Y+6	; 0x06
+ 702:	82 0f       	add	r24, r18
+ 704:	93 1f       	adc	r25, r19
+ 706:	fc 01       	movw	r30, r24
+ 708:	80 81       	ld	r24, Z
+ 70a:	91 81       	ldd	r25, Z+1	; 0x01
+ 70c:	fc 01       	movw	r30, r24
+ 70e:	09 95       	icall
 		arr_fun[index].remaining_ticks = arr_fun[index].priodic_time ;
- 6de:	29 81       	ldd	r18, Y+1	; 0x01
- 6e0:	3a 81       	ldd	r19, Y+2	; 0x02
- 6e2:	4b e0       	ldi	r20, 0x0B	; 11
- 6e4:	42 9f       	mul	r20, r18
- 6e6:	c0 01       	movw	r24, r0
- 6e8:	43 9f       	mul	r20, r19
- 6ea:	90 0d       	add	r25, r0
- 6ec:	11 24       	eor	r1, r1
- 6ee:	2d 81       	ldd	r18, Y+5	; 0x05
- 6f0:	3e 81       	ldd	r19, Y+6	; 0x06
- 6f2:	28 0f       	add	r18, r24
- 6f4:	39 1f       	adc	r19, r25
- 6f6:	49 81       	ldd	r20, Y+1	; 0x01
- 6f8:	5a 81       	ldd	r21, Y+2	; 0x02
- 6fa:	6b e0       	ldi	r22, 0x0B	; 11
- 6fc:	64 9f       	mul	r22, r20
- 6fe:	c0 01       	movw	r24, r0
- 700:	65 9f       	mul	r22, r21
- 702:	90 0d       	add	r25, r0
- 704:	11 24       	eor	r1, r1
- 706:	4d 81       	ldd	r20, Y+5	; 0x05
- 708:	5e 81       	ldd	r21, Y+6	; 0x06
- 70a:	84 0f       	add	r24, r20
- 70c:	95 1f       	adc	r25, r21
- 70e:	fc 01       	movw	r30, r24
- 710:	82 81       	ldd	r24, Z+2	; 0x02
- 712:	93 81       	ldd	r25, Z+3	; 0x03
- 714:	a4 81       	ldd	r26, Z+4	; 0x04
- 716:	b5 81       	ldd	r27, Z+5	; 0x05
- 718:	f9 01       	movw	r30, r18
- 71a:	86 83       	std	Z+6, r24	; 0x06
- 71c:	97 83       	std	Z+7, r25	; 0x07
- 71e:	a0 87       	std	Z+8, r26	; 0x08
- 720:	b1 87       	std	Z+9, r27	; 0x09
-	}
-	else {  } 
-		arr_fun[index].remaining_ticks -- ; }
- 722:	29 81       	ldd	r18, Y+1	; 0x01
- 724:	3a 81       	ldd	r19, Y+2	; 0x02
- 726:	4b e0       	ldi	r20, 0x0B	; 11
- 728:	42 9f       	mul	r20, r18
- 72a:	c0 01       	movw	r24, r0
- 72c:	43 9f       	mul	r20, r19
- 72e:	90 0d       	add	r25, r0
- 730:	11 24       	eor	r1, r1
- 732:	2d 81       	ldd	r18, Y+5	; 0x05
- 734:	3e 81       	ldd	r19, Y+6	; 0x06
- 736:	28 0f       	add	r18, r24
- 738:	39 1f       	adc	r19, r25
- 73a:	f9 01       	movw	r30, r18
- 73c:	86 81       	ldd	r24, Z+6	; 0x06
- 73e:	97 81       	ldd	r25, Z+7	; 0x07
- 740:	a0 85       	ldd	r26, Z+8	; 0x08
- 742:	b1 85       	ldd	r27, Z+9	; 0x09
- 744:	01 97       	sbiw	r24, 0x01	; 1
- 746:	a1 09       	sbc	r26, r1
- 748:	b1 09       	sbc	r27, r1
+ 710:	29 81       	ldd	r18, Y+1	; 0x01
+ 712:	3a 81       	ldd	r19, Y+2	; 0x02
+ 714:	4b e0       	ldi	r20, 0x0B	; 11
+ 716:	42 9f       	mul	r20, r18
+ 718:	c0 01       	movw	r24, r0
+ 71a:	43 9f       	mul	r20, r19
+ 71c:	90 0d       	add	r25, r0
+ 71e:	11 24       	eor	r1, r1
+ 720:	2d 81       	ldd	r18, Y+5	; 0x05
+ 722:	3e 81       	ldd	r19, Y+6	; 0x06
+ 724:	28 0f       	add	r18, r24
+ 726:	39 1f       	adc	r19, r25
+ 728:	49 81       	ldd	r20, Y+1	; 0x01
+ 72a:	5a 81       	ldd	r21, Y+2	; 0x02
+ 72c:	6b e0       	ldi	r22, 0x0B	; 11
+ 72e:	64 9f       	mul	r22, r20
+ 730:	c0 01       	movw	r24, r0
+ 732:	65 9f       	mul	r22, r21
+ 734:	90 0d       	add	r25, r0
+ 736:	11 24       	eor	r1, r1
+ 738:	4d 81       	ldd	r20, Y+5	; 0x05
+ 73a:	5e 81       	ldd	r21, Y+6	; 0x06
+ 73c:	84 0f       	add	r24, r20
+ 73e:	95 1f       	adc	r25, r21
+ 740:	fc 01       	movw	r30, r24
+ 742:	82 81       	ldd	r24, Z+2	; 0x02
+ 744:	93 81       	ldd	r25, Z+3	; 0x03
+ 746:	a4 81       	ldd	r26, Z+4	; 0x04
+ 748:	b5 81       	ldd	r27, Z+5	; 0x05
  74a:	f9 01       	movw	r30, r18
  74c:	86 83       	std	Z+6, r24	; 0x06
  74e:	97 83       	std	Z+7, r25	; 0x07
  750:	a0 87       	std	Z+8, r26	; 0x08
  752:	b1 87       	std	Z+9, r27	; 0x09
+	}
+	else {  } 
+		arr_fun[index].remaining_ticks -- ; }
+ 754:	29 81       	ldd	r18, Y+1	; 0x01
+ 756:	3a 81       	ldd	r19, Y+2	; 0x02
+ 758:	4b e0       	ldi	r20, 0x0B	; 11
+ 75a:	42 9f       	mul	r20, r18
+ 75c:	c0 01       	movw	r24, r0
+ 75e:	43 9f       	mul	r20, r19
+ 760:	90 0d       	add	r25, r0
+ 762:	11 24       	eor	r1, r1
+ 764:	2d 81       	ldd	r18, Y+5	; 0x05
+ 766:	3e 81       	ldd	r19, Y+6	; 0x06
+ 768:	28 0f       	add	r18, r24
+ 76a:	39 1f       	adc	r19, r25
+ 76c:	f9 01       	movw	r30, r18
+ 76e:	86 81       	ldd	r24, Z+6	; 0x06
+ 770:	97 81       	ldd	r25, Z+7	; 0x07
+ 772:	a0 85       	ldd	r26, Z+8	; 0x08
+ 774:	b1 85       	ldd	r27, Z+9	; 0x09
+ 776:	01 97       	sbiw	r24, 0x01	; 1
+ 778:	a1 09       	sbc	r26, r1
+ 77a:	b1 09       	sbc	r27, r1
+ 77c:	f9 01       	movw	r30, r18
+ 77e:	86 83       	std	Z+6, r24	; 0x06
+ 780:	97 83       	std	Z+7, r25	; 0x07
+ 782:	a0 87       	std	Z+8, r26	; 0x08
+ 784:	b1 87       	std	Z+9, r27	; 0x09
 * function return :-            N/A                                                                     *
 ********************************************************************************************************/
 void pre_filled_arr(TCB arr_fun[],uint32 size){
     /* - call task by their order */
 	uint32 index;
 	for(index = 0;index<size;index++){
- 754:	89 81       	ldd	r24, Y+1	; 0x01
- 756:	9a 81       	ldd	r25, Y+2	; 0x02
- 758:	ab 81       	ldd	r26, Y+3	; 0x03
- 75a:	bc 81       	ldd	r27, Y+4	; 0x04
- 75c:	01 96       	adiw	r24, 0x01	; 1
- 75e:	a1 1d       	adc	r26, r1
- 760:	b1 1d       	adc	r27, r1
- 762:	89 83       	std	Y+1, r24	; 0x01
- 764:	9a 83       	std	Y+2, r25	; 0x02
- 766:	ab 83       	std	Y+3, r26	; 0x03
- 768:	bc 83       	std	Y+4, r27	; 0x04
- 76a:	29 81       	ldd	r18, Y+1	; 0x01
- 76c:	3a 81       	ldd	r19, Y+2	; 0x02
- 76e:	4b 81       	ldd	r20, Y+3	; 0x03
- 770:	5c 81       	ldd	r21, Y+4	; 0x04
- 772:	8f 81       	ldd	r24, Y+7	; 0x07
- 774:	98 85       	ldd	r25, Y+8	; 0x08
- 776:	a9 85       	ldd	r26, Y+9	; 0x09
- 778:	ba 85       	ldd	r27, Y+10	; 0x0a
- 77a:	28 17       	cp	r18, r24
- 77c:	39 07       	cpc	r19, r25
- 77e:	4a 07       	cpc	r20, r26
- 780:	5b 07       	cpc	r21, r27
- 782:	08 f4       	brcc	.+2      	; 0x786 <pre_filled_arr+0x11e>
- 784:	86 cf       	rjmp	.-244    	; 0x692 <pre_filled_arr+0x2a>
+ 786:	89 81       	ldd	r24, Y+1	; 0x01
+ 788:	9a 81       	ldd	r25, Y+2	; 0x02
+ 78a:	ab 81       	ldd	r26, Y+3	; 0x03
+ 78c:	bc 81       	ldd	r27, Y+4	; 0x04
+ 78e:	01 96       	adiw	r24, 0x01	; 1
+ 790:	a1 1d       	adc	r26, r1
+ 792:	b1 1d       	adc	r27, r1
+ 794:	89 83       	std	Y+1, r24	; 0x01
+ 796:	9a 83       	std	Y+2, r25	; 0x02
+ 798:	ab 83       	std	Y+3, r26	; 0x03
+ 79a:	bc 83       	std	Y+4, r27	; 0x04
+ 79c:	29 81       	ldd	r18, Y+1	; 0x01
+ 79e:	3a 81       	ldd	r19, Y+2	; 0x02
+ 7a0:	4b 81       	ldd	r20, Y+3	; 0x03
+ 7a2:	5c 81       	ldd	r21, Y+4	; 0x04
+ 7a4:	8f 81       	ldd	r24, Y+7	; 0x07
+ 7a6:	98 85       	ldd	r25, Y+8	; 0x08
+ 7a8:	a9 85       	ldd	r26, Y+9	; 0x09
+ 7aa:	ba 85       	ldd	r27, Y+10	; 0x0a
+ 7ac:	28 17       	cp	r18, r24
+ 7ae:	39 07       	cpc	r19, r25
+ 7b0:	4a 07       	cpc	r20, r26
+ 7b2:	5b 07       	cpc	r21, r27
+ 7b4:	08 f4       	brcc	.+2      	; 0x7b8 <pre_filled_arr+0x11e>
+ 7b6:	86 cf       	rjmp	.-244    	; 0x6c4 <pre_filled_arr+0x2a>
 		arr_fun[index].remaining_ticks = arr_fun[index].priodic_time ;
 	}
 	else {  } 
 		arr_fun[index].remaining_ticks -- ; }
 	
 }
- 786:	00 00       	nop
- 788:	2a 96       	adiw	r28, 0x0a	; 10
- 78a:	0f b6       	in	r0, 0x3f	; 63
- 78c:	f8 94       	cli
- 78e:	de bf       	out	0x3e, r29	; 62
- 790:	0f be       	out	0x3f, r0	; 63
- 792:	cd bf       	out	0x3d, r28	; 61
- 794:	df 91       	pop	r29
- 796:	cf 91       	pop	r28
- 798:	08 95       	ret
+ 7b8:	00 00       	nop
+ 7ba:	2a 96       	adiw	r28, 0x0a	; 10
+ 7bc:	0f b6       	in	r0, 0x3f	; 63
+ 7be:	f8 94       	cli
+ 7c0:	de bf       	out	0x3e, r29	; 62
+ 7c2:	0f be       	out	0x3f, r0	; 63
+ 7c4:	cd bf       	out	0x3d, r28	; 61
+ 7c6:	df 91       	pop	r29
+ 7c8:	cf 91       	pop	r28
+ 7ca:	08 95       	ret
 
-0000079a <set_callback_flag>:
+000007cc <set_callback_flag>:
 
 void set_callback_flag(void){
- 79a:	cf 93       	push	r28
- 79c:	df 93       	push	r29
- 79e:	cd b7       	in	r28, 0x3d	; 61
- 7a0:	de b7       	in	r29, 0x3e	; 62
+ 7cc:	cf 93       	push	r28
+ 7ce:	df 93       	push	r29
+ 7d0:	cd b7       	in	r28, 0x3d	; 61
+ 7d2:	de b7       	in	r29, 0x3e	; 62
 	g_flag = TRUE ;
- 7a2:	81 e0       	ldi	r24, 0x01	; 1
- 7a4:	80 93 66 00 	sts	0x0066, r24	; 0x800066 <g_flag>
+ 7d4:	81 e0       	ldi	r24, 0x01	; 1
+ 7d6:	80 93 66 00 	sts	0x0066, r24	; 0x800066 <g_flag>
 }
- 7a8:	00 00       	nop
- 7aa:	df 91       	pop	r29
- 7ac:	cf 91       	pop	r28
- 7ae:	08 95       	ret
+ 7da:	00 00       	nop
+ 7dc:	df 91       	pop	r29
+ 7de:	cf 91       	pop	r28
+ 7e0:	08 95       	ret
 
-000007b0 <scheduler_Add_Task>:
+000007e2 <scheduler_Add_Task>:
 * function job :-    its responsible for adding task to OS. it fills array of struct with new tasks  *
 * function arguments :- pointer to function(task) , time of periodicity , task periority             *
 * function return :-   true if task added successfully and false if it exceed max siz                *
 *****************************************************************************************************/
 uint8 scheduler_Add_Task(ptr_fun new_task,uint32 period,uint8 periority)
 {
- 7b0:	cf 93       	push	r28
- 7b2:	df 93       	push	r29
- 7b4:	cd b7       	in	r28, 0x3d	; 61
- 7b6:	de b7       	in	r29, 0x3e	; 62
- 7b8:	27 97       	sbiw	r28, 0x07	; 7
- 7ba:	0f b6       	in	r0, 0x3f	; 63
- 7bc:	f8 94       	cli
- 7be:	de bf       	out	0x3e, r29	; 62
- 7c0:	0f be       	out	0x3f, r0	; 63
- 7c2:	cd bf       	out	0x3d, r28	; 61
- 7c4:	9a 83       	std	Y+2, r25	; 0x02
- 7c6:	89 83       	std	Y+1, r24	; 0x01
- 7c8:	4b 83       	std	Y+3, r20	; 0x03
- 7ca:	5c 83       	std	Y+4, r21	; 0x04
- 7cc:	6d 83       	std	Y+5, r22	; 0x05
- 7ce:	7e 83       	std	Y+6, r23	; 0x06
- 7d0:	2f 83       	std	Y+7, r18	; 0x07
+ 7e2:	cf 93       	push	r28
+ 7e4:	df 93       	push	r29
+ 7e6:	cd b7       	in	r28, 0x3d	; 61
+ 7e8:	de b7       	in	r29, 0x3e	; 62
+ 7ea:	27 97       	sbiw	r28, 0x07	; 7
+ 7ec:	0f b6       	in	r0, 0x3f	; 63
+ 7ee:	f8 94       	cli
+ 7f0:	de bf       	out	0x3e, r29	; 62
+ 7f2:	0f be       	out	0x3f, r0	; 63
+ 7f4:	cd bf       	out	0x3d, r28	; 61
+ 7f6:	9a 83       	std	Y+2, r25	; 0x02
+ 7f8:	89 83       	std	Y+1, r24	; 0x01
+ 7fa:	4b 83       	std	Y+3, r20	; 0x03
+ 7fc:	5c 83       	std	Y+4, r21	; 0x04
+ 7fe:	6d 83       	std	Y+5, r22	; 0x05
+ 800:	7e 83       	std	Y+6, r23	; 0x06
+ 802:	2f 83       	std	Y+7, r18	; 0x07
 	if( g_index < max_size ){
- 7d2:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 7d6:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 7da:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 7de:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 7e2:	03 97       	sbiw	r24, 0x03	; 3
- 7e4:	a1 05       	cpc	r26, r1
- 7e6:	b1 05       	cpc	r27, r1
- 7e8:	08 f0       	brcs	.+2      	; 0x7ec <scheduler_Add_Task+0x3c>
- 7ea:	75 c0       	rjmp	.+234    	; 0x8d6 <__stack+0x77>
+ 804:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 808:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 80c:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 810:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 814:	03 97       	sbiw	r24, 0x03	; 3
+ 816:	a1 05       	cpc	r26, r1
+ 818:	b1 05       	cpc	r27, r1
+ 81a:	08 f0       	brcs	.+2      	; 0x81e <scheduler_Add_Task+0x3c>
+ 81c:	75 c0       	rjmp	.+234    	; 0x908 <__stack+0xa9>
 		task_arr[g_index].ptr_task_fun = new_task ;
- 7ec:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 7f0:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 7f4:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 7f8:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 7fc:	9c 01       	movw	r18, r24
- 7fe:	4b e0       	ldi	r20, 0x0B	; 11
- 800:	42 9f       	mul	r20, r18
- 802:	c0 01       	movw	r24, r0
- 804:	43 9f       	mul	r20, r19
- 806:	90 0d       	add	r25, r0
- 808:	11 24       	eor	r1, r1
- 80a:	89 59       	subi	r24, 0x99	; 153
- 80c:	9f 4f       	sbci	r25, 0xFF	; 255
- 80e:	29 81       	ldd	r18, Y+1	; 0x01
- 810:	3a 81       	ldd	r19, Y+2	; 0x02
- 812:	fc 01       	movw	r30, r24
- 814:	31 83       	std	Z+1, r19	; 0x01
- 816:	20 83       	st	Z, r18
+ 81e:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 822:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 826:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 82a:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 82e:	9c 01       	movw	r18, r24
+ 830:	4b e0       	ldi	r20, 0x0B	; 11
+ 832:	42 9f       	mul	r20, r18
+ 834:	c0 01       	movw	r24, r0
+ 836:	43 9f       	mul	r20, r19
+ 838:	90 0d       	add	r25, r0
+ 83a:	11 24       	eor	r1, r1
+ 83c:	89 59       	subi	r24, 0x99	; 153
+ 83e:	9f 4f       	sbci	r25, 0xFF	; 255
+ 840:	29 81       	ldd	r18, Y+1	; 0x01
+ 842:	3a 81       	ldd	r19, Y+2	; 0x02
+ 844:	fc 01       	movw	r30, r24
+ 846:	31 83       	std	Z+1, r19	; 0x01
+ 848:	20 83       	st	Z, r18
 		task_arr[g_index].priodic_time = period ;
- 818:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 81c:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 820:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 824:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 828:	9c 01       	movw	r18, r24
- 82a:	4b e0       	ldi	r20, 0x0B	; 11
- 82c:	42 9f       	mul	r20, r18
- 82e:	c0 01       	movw	r24, r0
- 830:	43 9f       	mul	r20, r19
- 832:	90 0d       	add	r25, r0
- 834:	11 24       	eor	r1, r1
- 836:	9c 01       	movw	r18, r24
- 838:	27 59       	subi	r18, 0x97	; 151
- 83a:	3f 4f       	sbci	r19, 0xFF	; 255
- 83c:	8b 81       	ldd	r24, Y+3	; 0x03
- 83e:	9c 81       	ldd	r25, Y+4	; 0x04
- 840:	ad 81       	ldd	r26, Y+5	; 0x05
- 842:	be 81       	ldd	r27, Y+6	; 0x06
- 844:	f9 01       	movw	r30, r18
- 846:	80 83       	st	Z, r24
- 848:	91 83       	std	Z+1, r25	; 0x01
- 84a:	a2 83       	std	Z+2, r26	; 0x02
- 84c:	b3 83       	std	Z+3, r27	; 0x03
+ 84a:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 84e:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 852:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 856:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 85a:	9c 01       	movw	r18, r24
+ 85c:	4b e0       	ldi	r20, 0x0B	; 11
+ 85e:	42 9f       	mul	r20, r18
+ 860:	c0 01       	movw	r24, r0
+ 862:	43 9f       	mul	r20, r19
+ 864:	90 0d       	add	r25, r0
+ 866:	11 24       	eor	r1, r1
+ 868:	9c 01       	movw	r18, r24
+ 86a:	27 59       	subi	r18, 0x97	; 151
+ 86c:	3f 4f       	sbci	r19, 0xFF	; 255
+ 86e:	8b 81       	ldd	r24, Y+3	; 0x03
+ 870:	9c 81       	ldd	r25, Y+4	; 0x04
+ 872:	ad 81       	ldd	r26, Y+5	; 0x05
+ 874:	be 81       	ldd	r27, Y+6	; 0x06
+ 876:	f9 01       	movw	r30, r18
+ 878:	80 83       	st	Z, r24
+ 87a:	91 83       	std	Z+1, r25	; 0x01
+ 87c:	a2 83       	std	Z+2, r26	; 0x02
+ 87e:	b3 83       	std	Z+3, r27	; 0x03
 		task_arr[g_index].remaining_ticks = period ;
- 84e:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 852:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 856:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 85a:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 85e:	9c 01       	movw	r18, r24
- 860:	4b e0       	ldi	r20, 0x0B	; 11
- 862:	42 9f       	mul	r20, r18
- 864:	c0 01       	movw	r24, r0
- 866:	43 9f       	mul	r20, r19
- 868:	90 0d       	add	r25, r0
- 86a:	11 24       	eor	r1, r1
- 86c:	9c 01       	movw	r18, r24
- 86e:	23 59       	subi	r18, 0x93	; 147
- 870:	3f 4f       	sbci	r19, 0xFF	; 255
- 872:	8b 81       	ldd	r24, Y+3	; 0x03
- 874:	9c 81       	ldd	r25, Y+4	; 0x04
- 876:	ad 81       	ldd	r26, Y+5	; 0x05
- 878:	be 81       	ldd	r27, Y+6	; 0x06
- 87a:	f9 01       	movw	r30, r18
- 87c:	80 83       	st	Z, r24
- 87e:	91 83       	std	Z+1, r25	; 0x01
- 880:	a2 83       	std	Z+2, r26	; 0x02
- 882:	b3 83       	std	Z+3, r27	; 0x03
+ 880:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 884:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 888:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 88c:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 890:	9c 01       	movw	r18, r24
+ 892:	4b e0       	ldi	r20, 0x0B	; 11
+ 894:	42 9f       	mul	r20, r18
+ 896:	c0 01       	movw	r24, r0
+ 898:	43 9f       	mul	r20, r19
+ 89a:	90 0d       	add	r25, r0
+ 89c:	11 24       	eor	r1, r1
+ 89e:	9c 01       	movw	r18, r24
+ 8a0:	23 59       	subi	r18, 0x93	; 147
+ 8a2:	3f 4f       	sbci	r19, 0xFF	; 255
+ 8a4:	8b 81       	ldd	r24, Y+3	; 0x03
+ 8a6:	9c 81       	ldd	r25, Y+4	; 0x04
+ 8a8:	ad 81       	ldd	r26, Y+5	; 0x05
+ 8aa:	be 81       	ldd	r27, Y+6	; 0x06
+ 8ac:	f9 01       	movw	r30, r18
+ 8ae:	80 83       	st	Z, r24
+ 8b0:	91 83       	std	Z+1, r25	; 0x01
+ 8b2:	a2 83       	std	Z+2, r26	; 0x02
+ 8b4:	b3 83       	std	Z+3, r27	; 0x03
 		task_arr[g_index].task_periority = periority ;
- 884:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 888:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 88c:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 890:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 894:	9c 01       	movw	r18, r24
- 896:	4b e0       	ldi	r20, 0x0B	; 11
- 898:	42 9f       	mul	r20, r18
- 89a:	c0 01       	movw	r24, r0
- 89c:	43 9f       	mul	r20, r19
- 89e:	90 0d       	add	r25, r0
- 8a0:	11 24       	eor	r1, r1
- 8a2:	8f 58       	subi	r24, 0x8F	; 143
- 8a4:	9f 4f       	sbci	r25, 0xFF	; 255
- 8a6:	2f 81       	ldd	r18, Y+7	; 0x07
- 8a8:	fc 01       	movw	r30, r24
- 8aa:	20 83       	st	Z, r18
+ 8b6:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 8ba:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 8be:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 8c2:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 8c6:	9c 01       	movw	r18, r24
+ 8c8:	4b e0       	ldi	r20, 0x0B	; 11
+ 8ca:	42 9f       	mul	r20, r18
+ 8cc:	c0 01       	movw	r24, r0
+ 8ce:	43 9f       	mul	r20, r19
+ 8d0:	90 0d       	add	r25, r0
+ 8d2:	11 24       	eor	r1, r1
+ 8d4:	8f 58       	subi	r24, 0x8F	; 143
+ 8d6:	9f 4f       	sbci	r25, 0xFF	; 255
+ 8d8:	2f 81       	ldd	r18, Y+7	; 0x07
+ 8da:	fc 01       	movw	r30, r24
+ 8dc:	20 83       	st	Z, r18
 		g_index++;
- 8ac:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
- 8b0:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
- 8b4:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
- 8b8:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
- 8bc:	01 96       	adiw	r24, 0x01	; 1
- 8be:	a1 1d       	adc	r26, r1
- 8c0:	b1 1d       	adc	r27, r1
- 8c2:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <g_index>
- 8c6:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <g_index+0x1>
- 8ca:	a0 93 64 00 	sts	0x0064, r26	; 0x800064 <g_index+0x2>
- 8ce:	b0 93 65 00 	sts	0x0065, r27	; 0x800065 <g_index+0x3>
+ 8de:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <g_index>
+ 8e2:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <g_index+0x1>
+ 8e6:	a0 91 64 00 	lds	r26, 0x0064	; 0x800064 <g_index+0x2>
+ 8ea:	b0 91 65 00 	lds	r27, 0x0065	; 0x800065 <g_index+0x3>
+ 8ee:	01 96       	adiw	r24, 0x01	; 1
+ 8f0:	a1 1d       	adc	r26, r1
+ 8f2:	b1 1d       	adc	r27, r1
+ 8f4:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <g_index>
+ 8f8:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <g_index+0x1>
+ 8fc:	a0 93 64 00 	sts	0x0064, r26	; 0x800064 <g_index+0x2>
+ 900:	b0 93 65 00 	sts	0x0065, r27	; 0x800065 <g_index+0x3>
 		
 		return TRUE ;
- 8d2:	81 e0       	ldi	r24, 0x01	; 1
- 8d4:	01 c0       	rjmp	.+2      	; 0x8d8 <__stack+0x79>
+ 904:	81 e0       	ldi	r24, 0x01	; 1
+ 906:	01 c0       	rjmp	.+2      	; 0x90a <__stack+0xab>
 	}
 	return FALSE ;
- 8d6:	80 e0       	ldi	r24, 0x00	; 0
+ 908:	80 e0       	ldi	r24, 0x00	; 0
 }
- 8d8:	27 96       	adiw	r28, 0x07	; 7
- 8da:	0f b6       	in	r0, 0x3f	; 63
- 8dc:	f8 94       	cli
- 8de:	de bf       	out	0x3e, r29	; 62
- 8e0:	0f be       	out	0x3f, r0	; 63
- 8e2:	cd bf       	out	0x3d, r28	; 61
- 8e4:	df 91       	pop	r29
- 8e6:	cf 91       	pop	r28
- 8e8:	08 95       	ret
+ 90a:	27 96       	adiw	r28, 0x07	; 7
+ 90c:	0f b6       	in	r0, 0x3f	; 63
+ 90e:	f8 94       	cli
+ 910:	de bf       	out	0x3e, r29	; 62
+ 912:	0f be       	out	0x3f, r0	; 63
+ 914:	cd bf       	out	0x3d, r28	; 61
+ 916:	df 91       	pop	r29
+ 918:	cf 91       	pop	r28
+ 91a:	08 95       	ret
 
-000008ea <sort_arr>:
+0000091c <sort_arr>:
 * function job :-   sorting array of struct by periority                                                *
 * function arguments :-      array of struct & its size                                                 *
 * function return :-            N/A                                                                     *
 ********************************************************************************************************/
 void sort_arr(TCB arr[],uint8 size)
 {
- 8ea:	cf 93       	push	r28
- 8ec:	df 93       	push	r29
- 8ee:	cd b7       	in	r28, 0x3d	; 61
- 8f0:	de b7       	in	r29, 0x3e	; 62
- 8f2:	60 97       	sbiw	r28, 0x10	; 16
- 8f4:	0f b6       	in	r0, 0x3f	; 63
- 8f6:	f8 94       	cli
- 8f8:	de bf       	out	0x3e, r29	; 62
- 8fa:	0f be       	out	0x3f, r0	; 63
- 8fc:	cd bf       	out	0x3d, r28	; 61
- 8fe:	9f 87       	std	Y+15, r25	; 0x0f
- 900:	8e 87       	std	Y+14, r24	; 0x0e
- 902:	68 8b       	std	Y+16, r22	; 0x10
+ 91c:	cf 93       	push	r28
+ 91e:	df 93       	push	r29
+ 920:	cd b7       	in	r28, 0x3d	; 61
+ 922:	de b7       	in	r29, 0x3e	; 62
+ 924:	60 97       	sbiw	r28, 0x10	; 16
+ 926:	0f b6       	in	r0, 0x3f	; 63
+ 928:	f8 94       	cli
+ 92a:	de bf       	out	0x3e, r29	; 62
+ 92c:	0f be       	out	0x3f, r0	; 63
+ 92e:	cd bf       	out	0x3d, r28	; 61
+ 930:	9f 87       	std	Y+15, r25	; 0x0f
+ 932:	8e 87       	std	Y+14, r24	; 0x0e
+ 934:	68 8b       	std	Y+16, r22	; 0x10
 	uint8 i,j;
 	TCB temp;
 	for(i=0;i<size;i++){
- 904:	19 82       	std	Y+1, r1	; 0x01
- 906:	7c c0       	rjmp	.+248    	; 0xa00 <sort_arr+0x116>
+ 936:	19 82       	std	Y+1, r1	; 0x01
+ 938:	7c c0       	rjmp	.+248    	; 0xa32 <sort_arr+0x116>
 		for(j = i+1; j<size;j++){
- 908:	89 81       	ldd	r24, Y+1	; 0x01
- 90a:	8f 5f       	subi	r24, 0xFF	; 255
- 90c:	8a 83       	std	Y+2, r24	; 0x02
- 90e:	70 c0       	rjmp	.+224    	; 0x9f0 <sort_arr+0x106>
+ 93a:	89 81       	ldd	r24, Y+1	; 0x01
+ 93c:	8f 5f       	subi	r24, 0xFF	; 255
+ 93e:	8a 83       	std	Y+2, r24	; 0x02
+ 940:	70 c0       	rjmp	.+224    	; 0xa22 <sort_arr+0x106>
 			if(arr[j].task_periority <arr[i].task_periority){
- 910:	8a 81       	ldd	r24, Y+2	; 0x02
- 912:	28 2f       	mov	r18, r24
- 914:	30 e0       	ldi	r19, 0x00	; 0
- 916:	4b e0       	ldi	r20, 0x0B	; 11
- 918:	42 9f       	mul	r20, r18
- 91a:	c0 01       	movw	r24, r0
- 91c:	43 9f       	mul	r20, r19
- 91e:	90 0d       	add	r25, r0
- 920:	11 24       	eor	r1, r1
- 922:	2e 85       	ldd	r18, Y+14	; 0x0e
- 924:	3f 85       	ldd	r19, Y+15	; 0x0f
- 926:	82 0f       	add	r24, r18
- 928:	93 1f       	adc	r25, r19
- 92a:	fc 01       	movw	r30, r24
- 92c:	42 85       	ldd	r20, Z+10	; 0x0a
- 92e:	89 81       	ldd	r24, Y+1	; 0x01
- 930:	28 2f       	mov	r18, r24
- 932:	30 e0       	ldi	r19, 0x00	; 0
- 934:	5b e0       	ldi	r21, 0x0B	; 11
- 936:	52 9f       	mul	r21, r18
- 938:	c0 01       	movw	r24, r0
- 93a:	53 9f       	mul	r21, r19
- 93c:	90 0d       	add	r25, r0
- 93e:	11 24       	eor	r1, r1
- 940:	2e 85       	ldd	r18, Y+14	; 0x0e
- 942:	3f 85       	ldd	r19, Y+15	; 0x0f
- 944:	82 0f       	add	r24, r18
- 946:	93 1f       	adc	r25, r19
- 948:	fc 01       	movw	r30, r24
- 94a:	82 85       	ldd	r24, Z+10	; 0x0a
- 94c:	48 17       	cp	r20, r24
- 94e:	08 f0       	brcs	.+2      	; 0x952 <sort_arr+0x68>
- 950:	4c c0       	rjmp	.+152    	; 0x9ea <sort_arr+0x100>
+ 942:	8a 81       	ldd	r24, Y+2	; 0x02
+ 944:	28 2f       	mov	r18, r24
+ 946:	30 e0       	ldi	r19, 0x00	; 0
+ 948:	4b e0       	ldi	r20, 0x0B	; 11
+ 94a:	42 9f       	mul	r20, r18
+ 94c:	c0 01       	movw	r24, r0
+ 94e:	43 9f       	mul	r20, r19
+ 950:	90 0d       	add	r25, r0
+ 952:	11 24       	eor	r1, r1
+ 954:	2e 85       	ldd	r18, Y+14	; 0x0e
+ 956:	3f 85       	ldd	r19, Y+15	; 0x0f
+ 958:	82 0f       	add	r24, r18
+ 95a:	93 1f       	adc	r25, r19
+ 95c:	fc 01       	movw	r30, r24
+ 95e:	42 85       	ldd	r20, Z+10	; 0x0a
+ 960:	89 81       	ldd	r24, Y+1	; 0x01
+ 962:	28 2f       	mov	r18, r24
+ 964:	30 e0       	ldi	r19, 0x00	; 0
+ 966:	5b e0       	ldi	r21, 0x0B	; 11
+ 968:	52 9f       	mul	r21, r18
+ 96a:	c0 01       	movw	r24, r0
+ 96c:	53 9f       	mul	r21, r19
+ 96e:	90 0d       	add	r25, r0
+ 970:	11 24       	eor	r1, r1
+ 972:	2e 85       	ldd	r18, Y+14	; 0x0e
+ 974:	3f 85       	ldd	r19, Y+15	; 0x0f
+ 976:	82 0f       	add	r24, r18
+ 978:	93 1f       	adc	r25, r19
+ 97a:	fc 01       	movw	r30, r24
+ 97c:	82 85       	ldd	r24, Z+10	; 0x0a
+ 97e:	48 17       	cp	r20, r24
+ 980:	08 f0       	brcs	.+2      	; 0x984 <sort_arr+0x68>
+ 982:	4c c0       	rjmp	.+152    	; 0xa1c <sort_arr+0x100>
 				temp = arr[i];
- 952:	89 81       	ldd	r24, Y+1	; 0x01
- 954:	28 2f       	mov	r18, r24
- 956:	30 e0       	ldi	r19, 0x00	; 0
- 958:	4b e0       	ldi	r20, 0x0B	; 11
- 95a:	42 9f       	mul	r20, r18
- 95c:	c0 01       	movw	r24, r0
- 95e:	43 9f       	mul	r20, r19
- 960:	90 0d       	add	r25, r0
- 962:	11 24       	eor	r1, r1
- 964:	2e 85       	ldd	r18, Y+14	; 0x0e
- 966:	3f 85       	ldd	r19, Y+15	; 0x0f
- 968:	82 0f       	add	r24, r18
- 96a:	93 1f       	adc	r25, r19
- 96c:	2b e0       	ldi	r18, 0x0B	; 11
- 96e:	fc 01       	movw	r30, r24
- 970:	de 01       	movw	r26, r28
- 972:	13 96       	adiw	r26, 0x03	; 3
- 974:	01 90       	ld	r0, Z+
- 976:	0d 92       	st	X+, r0
- 978:	2a 95       	dec	r18
- 97a:	e1 f7       	brne	.-8      	; 0x974 <sort_arr+0x8a>
+ 984:	89 81       	ldd	r24, Y+1	; 0x01
+ 986:	28 2f       	mov	r18, r24
+ 988:	30 e0       	ldi	r19, 0x00	; 0
+ 98a:	4b e0       	ldi	r20, 0x0B	; 11
+ 98c:	42 9f       	mul	r20, r18
+ 98e:	c0 01       	movw	r24, r0
+ 990:	43 9f       	mul	r20, r19
+ 992:	90 0d       	add	r25, r0
+ 994:	11 24       	eor	r1, r1
+ 996:	2e 85       	ldd	r18, Y+14	; 0x0e
+ 998:	3f 85       	ldd	r19, Y+15	; 0x0f
+ 99a:	82 0f       	add	r24, r18
+ 99c:	93 1f       	adc	r25, r19
+ 99e:	2b e0       	ldi	r18, 0x0B	; 11
+ 9a0:	fc 01       	movw	r30, r24
+ 9a2:	de 01       	movw	r26, r28
+ 9a4:	13 96       	adiw	r26, 0x03	; 3
+ 9a6:	01 90       	ld	r0, Z+
+ 9a8:	0d 92       	st	X+, r0
+ 9aa:	2a 95       	dec	r18
+ 9ac:	e1 f7       	brne	.-8      	; 0x9a6 <sort_arr+0x8a>
 				arr[i] = arr[j];
- 97c:	89 81       	ldd	r24, Y+1	; 0x01
- 97e:	28 2f       	mov	r18, r24
- 980:	30 e0       	ldi	r19, 0x00	; 0
- 982:	4b e0       	ldi	r20, 0x0B	; 11
- 984:	42 9f       	mul	r20, r18
- 986:	c0 01       	movw	r24, r0
- 988:	43 9f       	mul	r20, r19
- 98a:	90 0d       	add	r25, r0
- 98c:	11 24       	eor	r1, r1
- 98e:	2e 85       	ldd	r18, Y+14	; 0x0e
- 990:	3f 85       	ldd	r19, Y+15	; 0x0f
- 992:	a9 01       	movw	r20, r18
- 994:	48 0f       	add	r20, r24
- 996:	59 1f       	adc	r21, r25
- 998:	8a 81       	ldd	r24, Y+2	; 0x02
- 99a:	28 2f       	mov	r18, r24
- 99c:	30 e0       	ldi	r19, 0x00	; 0
- 99e:	6b e0       	ldi	r22, 0x0B	; 11
- 9a0:	62 9f       	mul	r22, r18
- 9a2:	c0 01       	movw	r24, r0
- 9a4:	63 9f       	mul	r22, r19
- 9a6:	90 0d       	add	r25, r0
- 9a8:	11 24       	eor	r1, r1
- 9aa:	2e 85       	ldd	r18, Y+14	; 0x0e
- 9ac:	3f 85       	ldd	r19, Y+15	; 0x0f
- 9ae:	82 0f       	add	r24, r18
- 9b0:	93 1f       	adc	r25, r19
- 9b2:	2b e0       	ldi	r18, 0x0B	; 11
- 9b4:	fc 01       	movw	r30, r24
- 9b6:	da 01       	movw	r26, r20
- 9b8:	01 90       	ld	r0, Z+
- 9ba:	0d 92       	st	X+, r0
- 9bc:	2a 95       	dec	r18
- 9be:	e1 f7       	brne	.-8      	; 0x9b8 <sort_arr+0xce>
+ 9ae:	89 81       	ldd	r24, Y+1	; 0x01
+ 9b0:	28 2f       	mov	r18, r24
+ 9b2:	30 e0       	ldi	r19, 0x00	; 0
+ 9b4:	4b e0       	ldi	r20, 0x0B	; 11
+ 9b6:	42 9f       	mul	r20, r18
+ 9b8:	c0 01       	movw	r24, r0
+ 9ba:	43 9f       	mul	r20, r19
+ 9bc:	90 0d       	add	r25, r0
+ 9be:	11 24       	eor	r1, r1
+ 9c0:	2e 85       	ldd	r18, Y+14	; 0x0e
+ 9c2:	3f 85       	ldd	r19, Y+15	; 0x0f
+ 9c4:	a9 01       	movw	r20, r18
+ 9c6:	48 0f       	add	r20, r24
+ 9c8:	59 1f       	adc	r21, r25
+ 9ca:	8a 81       	ldd	r24, Y+2	; 0x02
+ 9cc:	28 2f       	mov	r18, r24
+ 9ce:	30 e0       	ldi	r19, 0x00	; 0
+ 9d0:	6b e0       	ldi	r22, 0x0B	; 11
+ 9d2:	62 9f       	mul	r22, r18
+ 9d4:	c0 01       	movw	r24, r0
+ 9d6:	63 9f       	mul	r22, r19
+ 9d8:	90 0d       	add	r25, r0
+ 9da:	11 24       	eor	r1, r1
+ 9dc:	2e 85       	ldd	r18, Y+14	; 0x0e
+ 9de:	3f 85       	ldd	r19, Y+15	; 0x0f
+ 9e0:	82 0f       	add	r24, r18
+ 9e2:	93 1f       	adc	r25, r19
+ 9e4:	2b e0       	ldi	r18, 0x0B	; 11
+ 9e6:	fc 01       	movw	r30, r24
+ 9e8:	da 01       	movw	r26, r20
+ 9ea:	01 90       	ld	r0, Z+
+ 9ec:	0d 92       	st	X+, r0
+ 9ee:	2a 95       	dec	r18
+ 9f0:	e1 f7       	brne	.-8      	; 0x9ea <sort_arr+0xce>
 				arr[j] = temp ;
- 9c0:	8a 81       	ldd	r24, Y+2	; 0x02
- 9c2:	28 2f       	mov	r18, r24
- 9c4:	30 e0       	ldi	r19, 0x00	; 0
- 9c6:	4b e0       	ldi	r20, 0x0B	; 11
- 9c8:	42 9f       	mul	r20, r18
- 9ca:	c0 01       	movw	r24, r0
- 9cc:	43 9f       	mul	r20, r19
- 9ce:	90 0d       	add	r25, r0
- 9d0:	11 24       	eor	r1, r1
- 9d2:	2e 85       	ldd	r18, Y+14	; 0x0e
- 9d4:	3f 85       	ldd	r19, Y+15	; 0x0f
- 9d6:	82 0f       	add	r24, r18
- 9d8:	93 1f       	adc	r25, r19
- 9da:	2b e0       	ldi	r18, 0x0B	; 11
- 9dc:	fe 01       	movw	r30, r28
- 9de:	33 96       	adiw	r30, 0x03	; 3
- 9e0:	dc 01       	movw	r26, r24
- 9e2:	01 90       	ld	r0, Z+
- 9e4:	0d 92       	st	X+, r0
- 9e6:	2a 95       	dec	r18
- 9e8:	e1 f7       	brne	.-8      	; 0x9e2 <sort_arr+0xf8>
+ 9f2:	8a 81       	ldd	r24, Y+2	; 0x02
+ 9f4:	28 2f       	mov	r18, r24
+ 9f6:	30 e0       	ldi	r19, 0x00	; 0
+ 9f8:	4b e0       	ldi	r20, 0x0B	; 11
+ 9fa:	42 9f       	mul	r20, r18
+ 9fc:	c0 01       	movw	r24, r0
+ 9fe:	43 9f       	mul	r20, r19
+ a00:	90 0d       	add	r25, r0
+ a02:	11 24       	eor	r1, r1
+ a04:	2e 85       	ldd	r18, Y+14	; 0x0e
+ a06:	3f 85       	ldd	r19, Y+15	; 0x0f
+ a08:	82 0f       	add	r24, r18
+ a0a:	93 1f       	adc	r25, r19
+ a0c:	2b e0       	ldi	r18, 0x0B	; 11
+ a0e:	fe 01       	movw	r30, r28
+ a10:	33 96       	adiw	r30, 0x03	; 3
+ a12:	dc 01       	movw	r26, r24
+ a14:	01 90       	ld	r0, Z+
+ a16:	0d 92       	st	X+, r0
+ a18:	2a 95       	dec	r18
+ a1a:	e1 f7       	brne	.-8      	; 0xa14 <sort_arr+0xf8>
 void sort_arr(TCB arr[],uint8 size)
 {
 	uint8 i,j;
 	TCB temp;
 	for(i=0;i<size;i++){
 		for(j = i+1; j<size;j++){
- 9ea:	8a 81       	ldd	r24, Y+2	; 0x02
- 9ec:	8f 5f       	subi	r24, 0xFF	; 255
- 9ee:	8a 83       	std	Y+2, r24	; 0x02
- 9f0:	9a 81       	ldd	r25, Y+2	; 0x02
- 9f2:	88 89       	ldd	r24, Y+16	; 0x10
- 9f4:	98 17       	cp	r25, r24
- 9f6:	08 f4       	brcc	.+2      	; 0x9fa <sort_arr+0x110>
- 9f8:	8b cf       	rjmp	.-234    	; 0x910 <sort_arr+0x26>
+ a1c:	8a 81       	ldd	r24, Y+2	; 0x02
+ a1e:	8f 5f       	subi	r24, 0xFF	; 255
+ a20:	8a 83       	std	Y+2, r24	; 0x02
+ a22:	9a 81       	ldd	r25, Y+2	; 0x02
+ a24:	88 89       	ldd	r24, Y+16	; 0x10
+ a26:	98 17       	cp	r25, r24
+ a28:	08 f4       	brcc	.+2      	; 0xa2c <sort_arr+0x110>
+ a2a:	8b cf       	rjmp	.-234    	; 0x942 <sort_arr+0x26>
 ********************************************************************************************************/
 void sort_arr(TCB arr[],uint8 size)
 {
 	uint8 i,j;
 	TCB temp;
 	for(i=0;i<size;i++){
- 9fa:	89 81       	ldd	r24, Y+1	; 0x01
- 9fc:	8f 5f       	subi	r24, 0xFF	; 255
- 9fe:	89 83       	std	Y+1, r24	; 0x01
- a00:	99 81       	ldd	r25, Y+1	; 0x01
- a02:	88 89       	ldd	r24, Y+16	; 0x10
- a04:	98 17       	cp	r25, r24
- a06:	08 f4       	brcc	.+2      	; 0xa0a <sort_arr+0x120>
- a08:	7f cf       	rjmp	.-258    	; 0x908 <sort_arr+0x1e>
+ a2c:	89 81       	ldd	r24, Y+1	; 0x01
+ a2e:	8f 5f       	subi	r24, 0xFF	; 255
+ a30:	89 83       	std	Y+1, r24	; 0x01
+ a32:	99 81       	ldd	r25, Y+1	; 0x01
+ a34:	88 89       	ldd	r24, Y+16	; 0x10
+ a36:	98 17       	cp	r25, r24
+ a38:	08 f4       	brcc	.+2      	; 0xa3c <sort_arr+0x120>
+ a3a:	7f cf       	rjmp	.-258    	; 0x93a <sort_arr+0x1e>
 				arr[j] = temp ;
 			}
 		}
 	}
 	
 }
- a0a:	00 00       	nop
- a0c:	60 96       	adiw	r28, 0x10	; 16
- a0e:	0f b6       	in	r0, 0x3f	; 63
- a10:	f8 94       	cli
- a12:	de bf       	out	0x3e, r29	; 62
- a14:	0f be       	out	0x3f, r0	; 63
- a16:	cd bf       	out	0x3d, r28	; 61
- a18:	df 91       	pop	r29
- a1a:	cf 91       	pop	r28
- a1c:	08 95       	ret
+ a3c:	00 00       	nop
+ a3e:	60 96       	adiw	r28, 0x10	; 16
+ a40:	0f b6       	in	r0, 0x3f	; 63
+ a42:	f8 94       	cli
+ a44:	de bf       	out	0x3e, r29	; 62
+ a46:	0f be       	out	0x3f, r0	; 63
+ a48:	cd bf       	out	0x3d, r28	; 61
+ a4a:	df 91       	pop	r29
+ a4c:	cf 91       	pop	r28
+ a4e:	08 95       	ret
 
-00000a1e <scheduler_Remove_Task>:
+00000a50 <scheduler_Remove_Task>:
 * function arguments :-     pointer to function                                                         *
 * function return :-            N/A                                                                     *
 ********************************************************************************************************/
 
 void scheduler_Remove_Task(ptr_fun task_remove)
 {
- a1e:	cf 93       	push	r28
- a20:	df 93       	push	r29
- a22:	cd b7       	in	r28, 0x3d	; 61
- a24:	de b7       	in	r29, 0x3e	; 62
- a26:	2a 97       	sbiw	r28, 0x0a	; 10
- a28:	0f b6       	in	r0, 0x3f	; 63
- a2a:	f8 94       	cli
- a2c:	de bf       	out	0x3e, r29	; 62
- a2e:	0f be       	out	0x3f, r0	; 63
- a30:	cd bf       	out	0x3d, r28	; 61
- a32:	9a 87       	std	Y+10, r25	; 0x0a
- a34:	89 87       	std	Y+9, r24	; 0x09
-	uint32 i,j;
-	for(i = FALSE;i<max_size;i++){
- a36:	19 82       	std	Y+1, r1	; 0x01
- a38:	1a 82       	std	Y+2, r1	; 0x02
- a3a:	1b 82       	std	Y+3, r1	; 0x03
- a3c:	1c 82       	std	Y+4, r1	; 0x04
- a3e:	1d c0       	rjmp	.+58     	; 0xa7a <scheduler_Remove_Task+0x5c>
-		if(task_arr[i].ptr_task_fun == task_remove){
- a40:	29 81       	ldd	r18, Y+1	; 0x01
- a42:	3a 81       	ldd	r19, Y+2	; 0x02
- a44:	4b e0       	ldi	r20, 0x0B	; 11
- a46:	42 9f       	mul	r20, r18
- a48:	c0 01       	movw	r24, r0
- a4a:	43 9f       	mul	r20, r19
- a4c:	90 0d       	add	r25, r0
- a4e:	11 24       	eor	r1, r1
- a50:	89 59       	subi	r24, 0x99	; 153
- a52:	9f 4f       	sbci	r25, 0xFF	; 255
- a54:	fc 01       	movw	r30, r24
- a56:	20 81       	ld	r18, Z
- a58:	31 81       	ldd	r19, Z+1	; 0x01
- a5a:	89 85       	ldd	r24, Y+9	; 0x09
- a5c:	9a 85       	ldd	r25, Y+10	; 0x0a
- a5e:	28 17       	cp	r18, r24
- a60:	39 07       	cpc	r19, r25
- a62:	a1 f0       	breq	.+40     	; 0xa8c <scheduler_Remove_Task+0x6e>
+ a50:	cf 93       	push	r28
+ a52:	df 93       	push	r29
+ a54:	cd b7       	in	r28, 0x3d	; 61
+ a56:	de b7       	in	r29, 0x3e	; 62
+ a58:	2a 97       	sbiw	r28, 0x0a	; 10
+ a5a:	0f b6       	in	r0, 0x3f	; 63
+ a5c:	f8 94       	cli
+ a5e:	de bf       	out	0x3e, r29	; 62
+ a60:	0f be       	out	0x3f, r0	; 63
+ a62:	cd bf       	out	0x3d, r28	; 61
+ a64:	9a 87       	std	Y+10, r25	; 0x0a
+ a66:	89 87       	std	Y+9, r24	; 0x09
+	uint32 count_task,j;
+	for(count_task= FALSE;count_task<max_size;count_task++){
+ a68:	19 82       	std	Y+1, r1	; 0x01
+ a6a:	1a 82       	std	Y+2, r1	; 0x02
+ a6c:	1b 82       	std	Y+3, r1	; 0x03
+ a6e:	1c 82       	std	Y+4, r1	; 0x04
+ a70:	1d c0       	rjmp	.+58     	; 0xaac <scheduler_Remove_Task+0x5c>
+		if(task_arr[count_task].ptr_task_fun == task_remove){
+ a72:	29 81       	ldd	r18, Y+1	; 0x01
+ a74:	3a 81       	ldd	r19, Y+2	; 0x02
+ a76:	4b e0       	ldi	r20, 0x0B	; 11
+ a78:	42 9f       	mul	r20, r18
+ a7a:	c0 01       	movw	r24, r0
+ a7c:	43 9f       	mul	r20, r19
+ a7e:	90 0d       	add	r25, r0
+ a80:	11 24       	eor	r1, r1
+ a82:	89 59       	subi	r24, 0x99	; 153
+ a84:	9f 4f       	sbci	r25, 0xFF	; 255
+ a86:	fc 01       	movw	r30, r24
+ a88:	20 81       	ld	r18, Z
+ a8a:	31 81       	ldd	r19, Z+1	; 0x01
+ a8c:	89 85       	ldd	r24, Y+9	; 0x09
+ a8e:	9a 85       	ldd	r25, Y+10	; 0x0a
+ a90:	28 17       	cp	r18, r24
+ a92:	39 07       	cpc	r19, r25
+ a94:	a1 f0       	breq	.+40     	; 0xabe <scheduler_Remove_Task+0x6e>
 ********************************************************************************************************/
 
 void scheduler_Remove_Task(ptr_fun task_remove)
 {
-	uint32 i,j;
-	for(i = FALSE;i<max_size;i++){
- a64:	89 81       	ldd	r24, Y+1	; 0x01
- a66:	9a 81       	ldd	r25, Y+2	; 0x02
- a68:	ab 81       	ldd	r26, Y+3	; 0x03
- a6a:	bc 81       	ldd	r27, Y+4	; 0x04
- a6c:	01 96       	adiw	r24, 0x01	; 1
- a6e:	a1 1d       	adc	r26, r1
- a70:	b1 1d       	adc	r27, r1
- a72:	89 83       	std	Y+1, r24	; 0x01
- a74:	9a 83       	std	Y+2, r25	; 0x02
- a76:	ab 83       	std	Y+3, r26	; 0x03
- a78:	bc 83       	std	Y+4, r27	; 0x04
- a7a:	89 81       	ldd	r24, Y+1	; 0x01
- a7c:	9a 81       	ldd	r25, Y+2	; 0x02
- a7e:	ab 81       	ldd	r26, Y+3	; 0x03
- a80:	bc 81       	ldd	r27, Y+4	; 0x04
- a82:	03 97       	sbiw	r24, 0x03	; 3
- a84:	a1 05       	cpc	r26, r1
- a86:	b1 05       	cpc	r27, r1
- a88:	d8 f2       	brcs	.-74     	; 0xa40 <scheduler_Remove_Task+0x22>
- a8a:	01 c0       	rjmp	.+2      	; 0xa8e <scheduler_Remove_Task+0x70>
-		if(task_arr[i].ptr_task_fun == task_remove){
+	uint32 count_task,j;
+	for(count_task= FALSE;count_task<max_size;count_task++){
+ a96:	89 81       	ldd	r24, Y+1	; 0x01
+ a98:	9a 81       	ldd	r25, Y+2	; 0x02
+ a9a:	ab 81       	ldd	r26, Y+3	; 0x03
+ a9c:	bc 81       	ldd	r27, Y+4	; 0x04
+ a9e:	01 96       	adiw	r24, 0x01	; 1
+ aa0:	a1 1d       	adc	r26, r1
+ aa2:	b1 1d       	adc	r27, r1
+ aa4:	89 83       	std	Y+1, r24	; 0x01
+ aa6:	9a 83       	std	Y+2, r25	; 0x02
+ aa8:	ab 83       	std	Y+3, r26	; 0x03
+ aaa:	bc 83       	std	Y+4, r27	; 0x04
+ aac:	89 81       	ldd	r24, Y+1	; 0x01
+ aae:	9a 81       	ldd	r25, Y+2	; 0x02
+ ab0:	ab 81       	ldd	r26, Y+3	; 0x03
+ ab2:	bc 81       	ldd	r27, Y+4	; 0x04
+ ab4:	03 97       	sbiw	r24, 0x03	; 3
+ ab6:	a1 05       	cpc	r26, r1
+ ab8:	b1 05       	cpc	r27, r1
+ aba:	d8 f2       	brcs	.-74     	; 0xa72 <scheduler_Remove_Task+0x22>
+ abc:	01 c0       	rjmp	.+2      	; 0xac0 <scheduler_Remove_Task+0x70>
+		if(task_arr[count_task].ptr_task_fun == task_remove){
 			break ;
- a8c:	00 00       	nop
+ abe:	00 00       	nop
 		}
 	}
-	for(j=i;j<max_size;j++){
- a8e:	89 81       	ldd	r24, Y+1	; 0x01
- a90:	9a 81       	ldd	r25, Y+2	; 0x02
- a92:	ab 81       	ldd	r26, Y+3	; 0x03
- a94:	bc 81       	ldd	r27, Y+4	; 0x04
- a96:	8d 83       	std	Y+5, r24	; 0x05
- a98:	9e 83       	std	Y+6, r25	; 0x06
- a9a:	af 83       	std	Y+7, r26	; 0x07
- a9c:	b8 87       	std	Y+8, r27	; 0x08
- a9e:	2c c0       	rjmp	.+88     	; 0xaf8 <scheduler_Remove_Task+0xda>
+	for(j=count_task;j<max_size;j++){
+ ac0:	89 81       	ldd	r24, Y+1	; 0x01
+ ac2:	9a 81       	ldd	r25, Y+2	; 0x02
+ ac4:	ab 81       	ldd	r26, Y+3	; 0x03
+ ac6:	bc 81       	ldd	r27, Y+4	; 0x04
+ ac8:	8d 83       	std	Y+5, r24	; 0x05
+ aca:	9e 83       	std	Y+6, r25	; 0x06
+ acc:	af 83       	std	Y+7, r26	; 0x07
+ ace:	b8 87       	std	Y+8, r27	; 0x08
+ ad0:	2c c0       	rjmp	.+88     	; 0xb2a <scheduler_Remove_Task+0xda>
 		task_arr[j]=task_arr[j+1];
- aa0:	8d 81       	ldd	r24, Y+5	; 0x05
- aa2:	9e 81       	ldd	r25, Y+6	; 0x06
- aa4:	af 81       	ldd	r26, Y+7	; 0x07
- aa6:	b8 85       	ldd	r27, Y+8	; 0x08
- aa8:	01 96       	adiw	r24, 0x01	; 1
- aaa:	a1 1d       	adc	r26, r1
- aac:	b1 1d       	adc	r27, r1
- aae:	4d 81       	ldd	r20, Y+5	; 0x05
- ab0:	5e 81       	ldd	r21, Y+6	; 0x06
- ab2:	6b e0       	ldi	r22, 0x0B	; 11
- ab4:	64 9f       	mul	r22, r20
- ab6:	90 01       	movw	r18, r0
- ab8:	65 9f       	mul	r22, r21
- aba:	30 0d       	add	r19, r0
- abc:	11 24       	eor	r1, r1
- abe:	29 59       	subi	r18, 0x99	; 153
- ac0:	3f 4f       	sbci	r19, 0xFF	; 255
- ac2:	ac 01       	movw	r20, r24
- ac4:	6b e0       	ldi	r22, 0x0B	; 11
- ac6:	64 9f       	mul	r22, r20
- ac8:	c0 01       	movw	r24, r0
- aca:	65 9f       	mul	r22, r21
- acc:	90 0d       	add	r25, r0
- ace:	11 24       	eor	r1, r1
- ad0:	89 59       	subi	r24, 0x99	; 153
- ad2:	9f 4f       	sbci	r25, 0xFF	; 255
- ad4:	4b e0       	ldi	r20, 0x0B	; 11
- ad6:	fc 01       	movw	r30, r24
- ad8:	d9 01       	movw	r26, r18
- ada:	01 90       	ld	r0, Z+
- adc:	0d 92       	st	X+, r0
- ade:	4a 95       	dec	r20
- ae0:	e1 f7       	brne	.-8      	; 0xada <scheduler_Remove_Task+0xbc>
-	for(i = FALSE;i<max_size;i++){
-		if(task_arr[i].ptr_task_fun == task_remove){
+ ad2:	8d 81       	ldd	r24, Y+5	; 0x05
+ ad4:	9e 81       	ldd	r25, Y+6	; 0x06
+ ad6:	af 81       	ldd	r26, Y+7	; 0x07
+ ad8:	b8 85       	ldd	r27, Y+8	; 0x08
+ ada:	01 96       	adiw	r24, 0x01	; 1
+ adc:	a1 1d       	adc	r26, r1
+ ade:	b1 1d       	adc	r27, r1
+ ae0:	4d 81       	ldd	r20, Y+5	; 0x05
+ ae2:	5e 81       	ldd	r21, Y+6	; 0x06
+ ae4:	6b e0       	ldi	r22, 0x0B	; 11
+ ae6:	64 9f       	mul	r22, r20
+ ae8:	90 01       	movw	r18, r0
+ aea:	65 9f       	mul	r22, r21
+ aec:	30 0d       	add	r19, r0
+ aee:	11 24       	eor	r1, r1
+ af0:	29 59       	subi	r18, 0x99	; 153
+ af2:	3f 4f       	sbci	r19, 0xFF	; 255
+ af4:	ac 01       	movw	r20, r24
+ af6:	6b e0       	ldi	r22, 0x0B	; 11
+ af8:	64 9f       	mul	r22, r20
+ afa:	c0 01       	movw	r24, r0
+ afc:	65 9f       	mul	r22, r21
+ afe:	90 0d       	add	r25, r0
+ b00:	11 24       	eor	r1, r1
+ b02:	89 59       	subi	r24, 0x99	; 153
+ b04:	9f 4f       	sbci	r25, 0xFF	; 255
+ b06:	4b e0       	ldi	r20, 0x0B	; 11
+ b08:	fc 01       	movw	r30, r24
+ b0a:	d9 01       	movw	r26, r18
+ b0c:	01 90       	ld	r0, Z+
+ b0e:	0d 92       	st	X+, r0
+ b10:	4a 95       	dec	r20
+ b12:	e1 f7       	brne	.-8      	; 0xb0c <scheduler_Remove_Task+0xbc>
+	for(count_task= FALSE;count_task<max_size;count_task++){
+		if(task_arr[count_task].ptr_task_fun == task_remove){
 			break ;
 		}
 	}
-	for(j=i;j<max_size;j++){
- ae2:	8d 81       	ldd	r24, Y+5	; 0x05
- ae4:	9e 81       	ldd	r25, Y+6	; 0x06
- ae6:	af 81       	ldd	r26, Y+7	; 0x07
- ae8:	b8 85       	ldd	r27, Y+8	; 0x08
- aea:	01 96       	adiw	r24, 0x01	; 1
- aec:	a1 1d       	adc	r26, r1
- aee:	b1 1d       	adc	r27, r1
- af0:	8d 83       	std	Y+5, r24	; 0x05
- af2:	9e 83       	std	Y+6, r25	; 0x06
- af4:	af 83       	std	Y+7, r26	; 0x07
- af6:	b8 87       	std	Y+8, r27	; 0x08
- af8:	8d 81       	ldd	r24, Y+5	; 0x05
- afa:	9e 81       	ldd	r25, Y+6	; 0x06
- afc:	af 81       	ldd	r26, Y+7	; 0x07
- afe:	b8 85       	ldd	r27, Y+8	; 0x08
- b00:	03 97       	sbiw	r24, 0x03	; 3
- b02:	a1 05       	cpc	r26, r1
- b04:	b1 05       	cpc	r27, r1
- b06:	60 f2       	brcs	.-104    	; 0xaa0 <scheduler_Remove_Task+0x82>
+	for(j=count_task;j<max_size;j++){
+ b14:	8d 81       	ldd	r24, Y+5	; 0x05
+ b16:	9e 81       	ldd	r25, Y+6	; 0x06
+ b18:	af 81       	ldd	r26, Y+7	; 0x07
+ b1a:	b8 85       	ldd	r27, Y+8	; 0x08
+ b1c:	01 96       	adiw	r24, 0x01	; 1
+ b1e:	a1 1d       	adc	r26, r1
+ b20:	b1 1d       	adc	r27, r1
+ b22:	8d 83       	std	Y+5, r24	; 0x05
+ b24:	9e 83       	std	Y+6, r25	; 0x06
+ b26:	af 83       	std	Y+7, r26	; 0x07
+ b28:	b8 87       	std	Y+8, r27	; 0x08
+ b2a:	8d 81       	ldd	r24, Y+5	; 0x05
+ b2c:	9e 81       	ldd	r25, Y+6	; 0x06
+ b2e:	af 81       	ldd	r26, Y+7	; 0x07
+ b30:	b8 85       	ldd	r27, Y+8	; 0x08
+ b32:	03 97       	sbiw	r24, 0x03	; 3
+ b34:	a1 05       	cpc	r26, r1
+ b36:	b1 05       	cpc	r27, r1
+ b38:	60 f2       	brcs	.-104    	; 0xad2 <scheduler_Remove_Task+0x82>
 		task_arr[j]=task_arr[j+1];
+		
 	}
- b08:	00 00       	nop
- b0a:	2a 96       	adiw	r28, 0x0a	; 10
- b0c:	0f b6       	in	r0, 0x3f	; 63
- b0e:	f8 94       	cli
- b10:	de bf       	out	0x3e, r29	; 62
- b12:	0f be       	out	0x3f, r0	; 63
- b14:	cd bf       	out	0x3d, r28	; 61
- b16:	df 91       	pop	r29
- b18:	cf 91       	pop	r28
- b1a:	08 95       	ret
+ b3a:	00 00       	nop
+ b3c:	2a 96       	adiw	r28, 0x0a	; 10
+ b3e:	0f b6       	in	r0, 0x3f	; 63
+ b40:	f8 94       	cli
+ b42:	de bf       	out	0x3e, r29	; 62
+ b44:	0f be       	out	0x3f, r0	; 63
+ b46:	cd bf       	out	0x3d, r28	; 61
+ b48:	df 91       	pop	r29
+ b4a:	cf 91       	pop	r28
+ b4c:	08 95       	ret
 
-00000b1c <_exit>:
- b1c:	f8 94       	cli
+00000b4e <_exit>:
+ b4e:	f8 94       	cli
 
-00000b1e <__stop_program>:
- b1e:	ff cf       	rjmp	.-2      	; 0xb1e <__stop_program>
+00000b50 <__stop_program>:
+ b50:	ff cf       	rjmp	.-2      	; 0xb50 <__stop_program>

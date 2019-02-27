@@ -15,6 +15,10 @@
 
 #include <stdlib.h>
 
+#define sec_3 3000
+#define sec_2 2000
+#define sec_4 4000
+#define OCR_1ms 200
 
 
 typedef void (*ptr_fun) (void);
